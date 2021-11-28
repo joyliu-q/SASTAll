@@ -1,0 +1,10 @@
+application:
+  ingress:
+    host: nychung.cis188.org
+    secretName: nychung-cis188-org-tls
+
+cronjob:
+  image: ghcr.io/cis188/hw4-nychung/unit4-cronjob
+
+web:
+  image: ghcr.io/cis188/hw4-nychung/unit4-web

@@ -1,0 +1,132 @@
+name: SAST Tools
+
+# Run this workflow every time a new commit pushed to your repository
+on: push
+
+jobs:
+  # Set the job key. The key is displayed as the job name
+  # when a job name is not provided
+  test:
+    # Name the Job
+    name: Test application
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: install poetry
+        uses: Gr1N/setup-poetry@v4
+
+      - name: install dependencies
+        run: npm install
+        working-directory: web
+
+      - name: install testing imports
+        run: |
+          pip install redis
+          pip install fastapi
+
+      - name: run tests
+        run: |
+          pip install pytest
+          pip install pytest-mock
+          pytest ./web/test_main.py
+
+      # TODO: install poetry and test code
+  # njsscan:
+  #   runs-on: ubuntu-latest
+  #   name: njsscan check
+  #   steps:
+  #     - name: Checkout the code
+  #       uses: actions/checkout@v2
+  #     - name: nodejsscan scan
+  #       id: njsscan
+  #       uses: ajinabraham/njsscan-action@master
+  #       with:
+  #         args: "."
+  njsscan:
+    runs-on: ubuntu-latest
+    name: njsscan code scanning
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+      - name: nodejsscan scan
+        id: njsscan
+        uses: ajinabraham/njsscan-action@master
+        with:
+          args: ". --sarif --output results.sarif || true"
+      - name: Upload njsscan report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: results.sarif
+
+  build:
+    # Name the Job
+    name: Build and publish docker image
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }} # sent to whoever is pushing the commit
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image fastapi
+        if: github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v2
+        with:
+          context: ./web
+          push: true #${{github.ref == 'ref/heads/master'}} if branch is master
+
+          tags: ghcr.io/cis188/hw4-nychung/unit4-fastapi:${{ github.sha }}
+          #context: web
+
+      - name: Build and push Docker image cronjob
+        if: github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v2
+        with:
+          context: ./cronjob
+          push: true #${{github.ref == 'refs/heads/master' }}
+          tags: ghcr.io/cis188/hw4-nychung/unit4-cronjob:${{ github.sha }}
+          #context: cronjob
+
+      # TODO: build and publish docker images
+
+  deploy:
+    name: Deploy latest version of code
+    #  if: github.ref == 'refs/heads/master' || github.event.pull_request.merged == true
+    # github.ref == 'refs/heads/master' && github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: us-east-1
+
+      - name: get kubeconfig from aws
+        run: |
+          aws eks --region us-east-1 update-kubeconfig --name cis188 --role-arn arn:aws:iam::474844133309:role/nychung --alias cis188
+          kubectl config set-context --current --namespace=nychung
+
+      - name: helm deploy
+        run: |
+          helm repo add bender-catalog https://helm.cis188.org 
+          helm search repo bender-catalog
+          helm --debug upgrade --install -f installation-values.yaml fire bender-catalog/bender-catalog --set image.tag=${{ github.sha }}
