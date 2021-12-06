@@ -33,7 +33,7 @@ jobs:
 
       - name: install dependencies
         run: npm install
-        working-directory: web
+        working-directory: pyproject/web
 
       - name: install testing imports
         run: |
