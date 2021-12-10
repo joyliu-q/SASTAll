@@ -19,6 +19,12 @@ on:
   #  - cron: '30 * * * *'
 
 jobs:
+  setup:
+    name: Set up
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create res folder
+        run: mkdir ./res
   semgrep:
     name: Semgrep Scan
     runs-on: ubuntu-latest
@@ -35,7 +41,7 @@ jobs:
 
       - name: Create file used for upload
         run: touch ./res/flaskproject-semgrep.sarif
-        
+
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
         with:
