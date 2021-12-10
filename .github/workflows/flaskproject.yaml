@@ -23,8 +23,11 @@ jobs:
     name: Set up
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Create res folder
-        run: mkdir ./res
+        run: | 
+          mkdir -p res
   semgrep:
     name: Semgrep Scan
     runs-on: ubuntu-latest
