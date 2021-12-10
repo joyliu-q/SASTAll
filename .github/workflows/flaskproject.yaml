@@ -39,7 +39,7 @@ jobs:
           sarif_file: ./res/flaskproject-semgrep.sarif
 
       - name: Install Semgrep
-        uses: docker run --rm -v "${PWD}:/src" returntocorp/semgrep --config=auto
+        run: docker run --rm -v "${PWD}:/src" returntocorp/semgrep --config=auto
     
       - name: Run Semgrep
         run: semgrep --config p/security-audit flaskproject -o ./res/flaskproject-semgrep.sarif --sarif 
