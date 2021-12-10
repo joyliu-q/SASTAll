@@ -51,7 +51,6 @@ jobs:
         with:
           sarif_file: flaskproject-semgrep.sarif
 
-
       - name: Cache Semgrep Results
         uses: actions/cache@v2
         with:
@@ -83,18 +82,15 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
 
-      - name: Create file used for upload
-        run: touch flaskproject-codeql.sarif
-
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: /results/python.sarif # this is what i found to be the file its being uploaded to, should personalize in future
+          sarif_file: results/python.sarif # this is what i found to be the file its being uploaded to, should personalize in future
 
       - name: Cache CodeQL Results
         uses: actions/cache@v2
         with:
-          path: flaskproject-codeql.sarif
+          path: results/python.sarif
           key: codeql
   upload:
     name: Upload sarif files
