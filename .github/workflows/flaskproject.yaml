@@ -48,10 +48,10 @@ jobs:
         run: semgrep --config p/security-audit flaskproject -o ./res/flaskproject-semgrep.sarif --sarif 
 
       - name: Cache Semgrep Results
-      uses: actions/cache@v2
-      with:
-        path: flaskproject-semgrep.sarif
-        key: semgrep
+        uses: actions/cache@v2
+        with:
+          path: flaskproject-semgrep.sarif
+          key: semgrep
   codeql:
     name: CodeQL Analysis - Test application
     runs-on: ubuntu-latest
