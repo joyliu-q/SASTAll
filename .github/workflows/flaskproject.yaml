@@ -78,4 +78,5 @@ jobs:
     runs-on: ubuntu-latest
     needs: [semgrep, codeql]
     steps:
-      - name: Copy over sarif files
+      - name: TODO TODO
+        run: cd ./res && ls
