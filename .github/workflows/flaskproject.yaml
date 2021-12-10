@@ -94,7 +94,7 @@ jobs:
     needs: [semgrep, codeql]
     steps:
       - name: Upload sarif files
-      - uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v2
         with:
           name: aggregated-sarif
           path: path/to/artifact.txt
