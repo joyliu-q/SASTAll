@@ -36,12 +36,9 @@ jobs:
       #- name: Create file used for upload
       #  run: touch flaskproject-semgrep.sarif
 
-      - name: Install Semgrep
-        run: docker run --rm -v "${PWD}:/src" returntocorp/semgrep --config=auto
-    
       - name: Run Semgrep
-        run: semgrep --config p/security-audit flaskproject -o ./res/flaskproject-semgrep.sarif --sarif 
-
+        run: docker run --rm -v "${PWD}:/src" returntocorp/semgrep --config p/security-audit flaskproject -o ./res/flaskproject-semgrep.sarif --sarif 
+    
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
         with:
