@@ -84,10 +84,10 @@ jobs:
           sarif_file: ./res/flaskproject-codeql.sarif
 
       - name: Cache CodeQL Results
-      uses: actions/cache@v2
-      with:
-        path: flaskproject-codeql.sarif
-        key: codeql
+        uses: actions/cache@v2
+        with:
+          path: flaskproject-codeql.sarif
+          key: codeql
   upload:
     name: Upload sarif files
     runs-on: ubuntu-latest
