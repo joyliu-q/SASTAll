@@ -85,7 +85,7 @@ jobs:
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: /results/python.sarif # this is what i found to be the file its being uploaded to
+          sarif_file: /results/python.sarif # this is what i found to be the file its being uploaded to, should personalize in future
 
       - name: Cache CodeQL Results
         uses: actions/cache@v2
