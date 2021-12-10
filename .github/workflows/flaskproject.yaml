@@ -23,8 +23,8 @@ jobs:
     name: Semgrep Scan
     runs-on: ubuntu-latest
     permissions:
-      actions: write # ngl this seems highly sus
-      contents: write
+      actions: read 
+      contents: read
       security-events: write
     steps:
       - name: Checkout code
@@ -40,8 +40,11 @@ jobs:
       #- name: Create file used for upload
       #  run: touch flaskproject-semgrep.sarif
 
+      - name: Install Semgrep
+        run: python3 -m pip install semgrep
+        
       - name: Run Semgrep
-        run: docker run --rm -v "${PWD}:/src" returntocorp/semgrep --config p/security-audit flaskproject -o flaskproject-semgrep.sarif --sarif 
+        run: semgrep --config p/security-audit flaskproject -o flaskproject-semgrep.sarif --sarif 
     
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
