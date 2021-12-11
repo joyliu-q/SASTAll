@@ -44,10 +44,10 @@ jobs:
         run: python3 -m pip install semgrep
         
       - name: Run Semgrep (trial 1 - AT LEAST MAKE IT PROJ SPECIFIC)
-      run: semgrep --config auto .
+        run: semgrep --config auto .
   
       - name: Run Semgrep (trial 2 - NOT AUTO )
-      run: semgrep --config p/security-audit .
+        run: semgrep --config p/security-audit .
 
       - name: Run Semgrep (what we want)
         run: semgrep --config p/security-audit . --sarif > flaskproject-semgrep.sarif
