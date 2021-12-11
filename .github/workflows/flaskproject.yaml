@@ -59,7 +59,7 @@ jobs:
       - name: Cache Semgrep Results
         uses: actions/cache@v2
         with:
-          path: /home/runner/work/SASTAll/SASTAll/flaskproject/flaskproject-semgrep.sarif
+          path: flaskproject-semgrep.sarif
           key: semgrep
   codeql:
     name: CodeQL Analysis - Test application
