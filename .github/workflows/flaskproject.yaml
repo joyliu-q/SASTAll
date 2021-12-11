@@ -49,11 +49,12 @@ jobs:
       - name: Run Semgrep
         run: semgrep --config p/security-audit . -o flaskproject-semgrep.sarif --sarif
 
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: /home/runner/work/SASTAll/SASTAll/flaskproject-semgrep.sarif #IMPORTANT: for some reason checkout_path doesn't work??
-          #checkout_path: /home/runner/work/SASTAll/SASTAll/flaskproject # THIS IS SO BAD SHOULD NOT BE MANUALLY DEFINING THIS BUT NO DOCUMENTATION AaAaa
+      # Rofl guess we'll just not upload this
+      #- name: Upload SARIF file
+      #  uses: github/codeql-action/upload-sarif@v1
+      #  with:
+      #    sarif_file: /home/runner/work/SASTAll/SASTAll/flaskproject-semgrep.sarif #IMPORTANT: for some reason checkout_path doesn't work??
+      #    #checkout_path: /home/runner/work/SASTAll/SASTAll/flaskproject # THIS IS SO BAD SHOULD NOT BE MANUALLY DEFINING THIS BUT NO DOCUMENTATION AaAaa
 
       - name: Cache Semgrep Results
         uses: actions/cache@v2
