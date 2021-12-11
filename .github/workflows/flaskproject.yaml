@@ -43,6 +43,9 @@ jobs:
       - name: Install Semgrep
         run: python3 -m pip install semgrep
 
+      - name: BRUH WHATS THE CURRENT DIRECTORY????
+        run: pwd
+        
       - name: Run Semgrep
         run: semgrep --config p/security-audit . -o flaskproject-semgrep.sarif --sarif
 
