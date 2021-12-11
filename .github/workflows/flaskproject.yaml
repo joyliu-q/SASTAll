@@ -52,7 +52,8 @@ jobs:
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: flaskproject-semgrep.sarif
+          sarif_file: flaskproject/flaskproject-semgrep.sarif #IMPORTANT: for some reason current_directory doesn't work??
+          current_directory: flaskproject
 
       - name: Cache Semgrep Results
         uses: actions/cache@v2
