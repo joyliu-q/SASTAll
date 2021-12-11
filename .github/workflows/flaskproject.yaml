@@ -43,17 +43,14 @@ jobs:
       - name: Install Semgrep
         run: python3 -m pip install semgrep
         
-      - name: Run Semgrep (trial 0 - BASIC)
-      run: semgrep --config auto .
-
       - name: Run Semgrep (trial 1 - AT LEAST MAKE IT PROJ SPECIFIC)
-      run: semgrep --config auto flaskproject
+      run: semgrep --config auto .
   
       - name: Run Semgrep (trial 2 - NOT AUTO )
-      run: semgrep --config p/security-audit flaskproject
+      run: semgrep --config p/security-audit .
 
       - name: Run Semgrep (what we want)
-        run: semgrep --config p/security-audit flaskproject --sarif > flaskproject-semgrep.sarif
+        run: semgrep --config p/security-audit . --sarif > flaskproject-semgrep.sarif
     
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
@@ -93,6 +90,9 @@ jobs:
 
       - name: (REMOVE THIS LATER) debugging
         run: ls
+      
+      - name: (REMOVE THIS LATER) donde esta sarif file???
+      run: ls ./results
       #- name: Upload SARIF file
       #  uses: github/codeql-action/upload-sarif@v1
       #  with:
