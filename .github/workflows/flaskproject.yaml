@@ -90,8 +90,8 @@ jobs:
       - name: (REMOVE THIS LATER) debugging
         run: ls
       
-      - name: (REMOVE THIS LATER) donde esta sarif file???
-        run: ls ./results
+      # TODO: get a way to find a local version of the CodeQL 
+
       #- name: Upload SARIF file
       #  uses: github/codeql-action/upload-sarif@v1
       #  with:
