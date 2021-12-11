@@ -44,7 +44,7 @@ jobs:
         run: python3 -m pip install semgrep
         
       - name: Run Semgrep
-        run: semgrep --config p/security-audit flaskproject -o flaskproject-semgrep.sarif --sarif 
+        run: semgrep --config p/security-audit flaskproject --sarif > flaskproject-semgrep.sarif
     
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
@@ -82,16 +82,18 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
 
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: results/python.sarif # this is what i found to be the file its being uploaded to, should personalize in future
+      - name: (REMOVE THIS LATER) debugging
+        run: ls
+      #- name: Upload SARIF file
+      #  uses: github/codeql-action/upload-sarif@v1
+      #  with:
+      #    sarif_file: ./results/python.sarif # this is what i found to be the file its being uploaded to, should personalize in future
 
-      - name: Cache CodeQL Results
-        uses: actions/cache@v2
-        with:
-          path: results/python.sarif
-          key: codeql
+      #- name: Cache CodeQL Results
+      #  uses: actions/cache@v2
+      #  with:
+      #    path: ./results/python.sarif
+      #    key: codeql
   upload:
     name: Upload sarif files
     runs-on: ubuntu-latest
