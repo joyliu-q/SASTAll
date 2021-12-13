@@ -50,12 +50,6 @@ jobs:
       #    sarif_file: /home/runner/work/SASTAll/SASTAll/flaskproject-semgrep.sarif #IMPORTANT: for some reason checkout_path doesn't work??
       #    #checkout_path: /home/runner/work/SASTAll/SASTAll/flaskproject # THIS IS SO BAD SHOULD NOT BE MANUALLY DEFINING THIS BUT NO DOCUMENTATION AaAaa
 
-      - name: Cache Semgrep Results
-        uses: actions/cache@v2
-        with:
-          path: flaskproject-semgrep.sarif
-          key: semgrep-${{ hashFiles('flaskproject-semgrep.sarif') }}
-      
       - name: Upload Semgrep Results as artifact
         uses: actions/upload-artifact@v2
         with:
