@@ -104,6 +104,9 @@ jobs:
       - name: (REMOVE LATER) CORRECT FILE debugging
         run: cat ./${{env.PROJECT}}/python.sarif > ./${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif # TODO: figure out why its name is python for some reason
         working-directory: ./
+      
+      - name: Set up aggregation script
+        run: chmod +x utils/agg.sh
         
       # Tfw we don't rlly need docker for this
       - name: Aggregate

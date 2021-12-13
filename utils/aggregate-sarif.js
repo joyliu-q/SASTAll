@@ -1,5 +1,4 @@
 // Reference: https://github.com/microsoft/sarif-tutorials/blob/main/docs/2-Basics.md
-// Reference: https://github.com/jduimovich/collect-sarif-files
 
 const fs = require('fs')
 const args = process.argv.splice(2)
