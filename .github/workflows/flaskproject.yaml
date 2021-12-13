@@ -56,7 +56,7 @@ jobs:
           path: flaskproject-semgrep.sarif
           key: semgrep-${{ hashFiles('flaskproject-semgrep.sarif') }}
       
-          - name: Upload Semgrep Results as artifact
+      - name: Upload Semgrep Results as artifact
         uses: actions/upload-artifact@v2
         with:
           name: semgrep-${{ hashFiles('flaskproject-semgrep.sarif') }}
