@@ -107,7 +107,7 @@ jobs:
         
       # Tfw we don't rlly need docker for this
       - name: Aggregate
-        run: ./utils/agg.sh ${{env.PROJECT}} sastall.sarif
+        run: utils/agg.sh ${{env.PROJECT}} sastall.sarif
         working-directory: ./
 
       - name: (REMOVE LATER) CI debugging
