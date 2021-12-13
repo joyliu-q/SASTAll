@@ -81,7 +81,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        working-directory: ./
 
       - name: Download semgrep artifact
         uses: actions/download-artifact@v2
@@ -96,21 +95,26 @@ jobs:
           path: ./${{env.PROJECT}}
 
       - name: (REMOVE LATER) CI debugging
-        run: ls
+        run: ls -R
+        working-directory: ./
 
       - name: (REMOVE LATER) CORRECT FILE debugging
         run: cat ./${{env.PROJECT}}-semgrep.sarif
+        working-directory: ./
 
       - name: (REMOVE LATER) CORRECT FILE debugging
         run: cat ./python.sarif > ./${{env.PROJECT}}-codeql.sarif # TODO: figure out why its name is python for some reason
-
+        working-directory: ./
+        
       # Tfw we don't rlly need docker for this
       - name: Aggregate
         run: ./utils/agg.sh ${{env.PROJECT}} sastall.sarif
-      
-      - name: (REMOVE LATER) CI debugging
-        run: ls
+        working-directory: ./
 
+      - name: (REMOVE LATER) CI debugging
+        run: ls -R
+        working-directory: ./
+        
       - name: Upload sarif files
         uses: actions/upload-artifact@v2
         with:
