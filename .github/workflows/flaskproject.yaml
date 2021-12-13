@@ -1,20 +1,23 @@
 name: FlaskProject Application Testing
 
+env:
+  PROJECT: flaskproject   
+
 defaults:
   run:
-    working-directory: flaskproject
+    working-directory: ${{env.PROJECT}}
 
 on:
   push:
     branches: [master]
     # Commenting out line below for better CI debugging
     #paths:
-    #  - 'flaskproject/**'
+    #  - '${{env.PROJECT}}/**'
   pull_request:
     branches: [master]
     # Commenting out line below for better CI debugging
     #paths:
-    #  - 'flaskproject/**'
+    #  - '${{env.PROJECT}}/**'
   # schedule:
   #  - cron: '30 * * * *'
 
@@ -34,13 +37,13 @@ jobs:
         run: python3 -m pip install semgrep
 
       - name: Run Semgrep
-        run: semgrep --config p/security-audit . -o flaskproject-semgrep.sarif --sarif
+        run: semgrep --config p/security-audit . -o ${{env.PROJECT}}-semgrep.sarif --sarif
         
       - name: Upload Semgrep Results as artifact
         uses: actions/upload-artifact@v2
         with:
           name: semgrep
-          path: flaskproject/flaskproject-semgrep.sarif # IMPORTANT: SPENT FOREVER ON THIS HERE'S WHY iT DIDNT WORK BEFORE: https://stackoverflow.com/questions/58226636/github-action-not-uploading-artifact
+          path: ${{env.PROJECT}}/${{env.PROJECT}}-semgrep.sarif # IMPORTANT: SPENT FOREVER ON THIS HERE'S WHY iT DIDNT WORK BEFORE: https://stackoverflow.com/questions/58226636/github-action-not-uploading-artifact
   codeql:
     name: CodeQL Analysis - Test application
     runs-on: ubuntu-latest
@@ -67,14 +70,14 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
         with:
-          output: flaskproject/flaskproject-codeql.sarif
+          output: ${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif
           upload: false
       
       - name: Upload CodeQL Results as artifact
         uses: actions/upload-artifact@v2
         with:
           name: codeql
-          path: flaskproject/flaskproject-codeql.sarif
+          path: ${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif
   agg-and-upload:
     name: Aggregate & Upload sarif files
     runs-on: ubuntu-latest
@@ -87,26 +90,26 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: semgrep
-          path: ./flaskproject
+          path: ./${{env.PROJECT}}
 
       - name: Download codeql artifact
         uses: actions/download-artifact@v2
         with:
           name: codeql
-          path: ./flaskproject
+          path: ./${{env.PROJECT}}
 
       - name: (REMOVE LATER) CI debugging
         run: ls
 
       - name: (REMOVE LATER) CORRECT FILE debugging
-        run: cat ./flaskproject-semgrep.sarif
+        run: cat ./${{env.PROJECT}}-semgrep.sarif
 
       - name: (REMOVE LATER) CORRECT FILE debugging
-        run: cat ./flaskproject-codeql.sarif
+        run: cat ./${{env.PROJECT}}-codeql.sarif
 
       # Tfw we don't rlly need docker for this
       - name: Aggregate
-        run: ../utils/agg.sh flaskproject sastall.sarif
+        run: ../utils/agg.sh ${{env.PROJECT}} sastall.sarif
       
       - name: (REMOVE LATER) CI debugging
         run: ls
@@ -115,4 +118,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: aggregated-sarif
-          path: flaskproject/sastall.sarif
+          path: ${{env.PROJECT}}/sastall.sarif
