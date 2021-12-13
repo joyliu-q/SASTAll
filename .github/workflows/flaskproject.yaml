@@ -36,10 +36,7 @@ jobs:
       #    config: >- # more at semgrep.dev/explore
       #      p/security-audit
       #      p/secrets
-          
-      #- name: Create file used for upload
-      #  run: touch flaskproject-semgrep.sarif
-
+        
       - name: Install Semgrep
         run: python3 -m pip install semgrep
 
@@ -58,6 +55,12 @@ jobs:
         with:
           path: flaskproject-semgrep.sarif
           key: semgrep-${{ hashFiles('flaskproject-semgrep.sarif') }}
+      
+          - name: Upload Semgrep Results as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: semgrep-${{ hashFiles('flaskproject-semgrep.sarif') }}
+          path: flaskproject-semgrep.sarif
   codeql:
     name: CodeQL Analysis - Test application
     runs-on: ubuntu-latest
