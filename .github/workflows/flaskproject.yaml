@@ -54,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: semgrep-${{ hashFiles('flaskproject-semgrep.sarif') }}
-          path: sastall/res/
+          path: sastall/res
   codeql:
     name: CodeQL Analysis - Test application
     runs-on: ubuntu-latest
