@@ -101,7 +101,7 @@ jobs:
         run: cat ./${{env.PROJECT}}-semgrep.sarif
 
       - name: (REMOVE LATER) CORRECT FILE debugging
-        run: cat ./${{env.PROJECT}}-codeql.sarif
+        run: cat ./python.sarif # TODO: figure out why its name is python for some reason
 
       # Tfw we don't rlly need docker for this
       - name: Aggregate
