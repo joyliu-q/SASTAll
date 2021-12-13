@@ -95,12 +95,14 @@ jobs:
           path: ./${{env.PROJECT}}
 
       # TODO: figure out why its name is python for some reason
+      # This is just a very temporary fix because it's just taking the python and
+      # directing it to a new file
       - name: (REMOVE LATER) CORRECT FILE debugging
         run: cat ./${{env.PROJECT}}/python.sarif > ./${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif 
         working-directory: ./
       
       - name: Set up aggregation script
-        run: chmod +x utils/agg.sh
+        run: chmod +x ./utils/agg.sh
         
       - name: Aggregate
         run: utils/agg.sh ${{env.PROJECT}} sastall.sarif
