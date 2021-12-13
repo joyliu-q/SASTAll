@@ -100,10 +100,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: semgrep
+          path: flaskproject-semgrep.sarif
       - name: Download codeql artifact
         uses: actions/download-artifact@v2
         with:
           name: codeql
+          path: flaskproject-codeql.sarif
       - name: (REMOVE LATER) CI debugging
         run: ls
       - name: (REMOVE LATER) CORRECT FILE debugging
