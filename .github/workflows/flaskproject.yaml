@@ -5,7 +5,7 @@ env:
 
 defaults:
   run:
-    working-directory: ${{env.PROJECT}}
+    working-directory: flaskproject
 
 on:
   push:
@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'python' ]
+        language: python
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
