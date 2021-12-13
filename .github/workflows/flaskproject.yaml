@@ -82,7 +82,7 @@ jobs:
         uses: github/codeql-action/analyze@v1
 
       - name: (REMOVE THIS LATER) debugging
-        run: ls
+        run: ls ~/home/runner/work/SASTAll/results/
       
       # TODO: get a way to find a local version of the CodeQL 
 
