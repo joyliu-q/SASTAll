@@ -83,9 +83,6 @@ jobs:
         with:
           output: flaskproject/flaskproject-codeql.sarif
           upload: false
-
-      - name: (REMOVE THIS LATER) debugging
-        run: ls
       
       - name: Upload CodeQL Results as artifact
         uses: actions/upload-artifact@v2
@@ -106,9 +103,11 @@ jobs:
         with:
           name: codeql
       - name: (REMOVE LATER) CI debugging
-        run: pwd
-      - name: (REMOVE LATER) CI debugging
         run: ls
+      - name: (REMOVE LATER) CORRECT FILE debugging
+        run: cat flaskproject-semgrep.sarif
+      - name: (REMOVE LATER) CORRECT FILE debugging
+        run: cat flaskproject-codeql.sarif
       #- name: Upload sarif files
       #  uses: actions/upload-artifact@v2
       #  with:
