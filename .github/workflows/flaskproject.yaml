@@ -97,10 +97,13 @@ jobs:
       # TODO: figure out why its name is python for some reason
       # This is just a very temporary fix because it's just taking the python and
       # directing it to a new file
-      - name: (REMOVE LATER) CORRECT FILE debugging
+      - name: Create codeql sarif file (debug later)
         run: cat ./${{env.PROJECT}}/python.sarif > ./${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif 
         working-directory: ./
       
+      - name: DEBUG
+        run: ls
+        
       - name: Set up aggregation script
         run: chmod +x ./utils/agg.sh
         working-directory: ./ 
