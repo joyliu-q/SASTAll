@@ -5,8 +5,8 @@ export RES=$2
 
 # TODO: right now WORKDIR is misleading because it's not adding prefix before path
 # So it's more similar to a path prefix than a work directory lol
-export SEMGREP="${WORKDIR}-semgrep.sarif"
-export CODEQL="${WORKDIR}-codeql.sarif"
+export SEMGREP="${WORKDIR}/${WORKDIR}-semgrep.sarif"
+export CODEQL="${WORKDIR}/${WORKDIR}-codeql.sarif"
 
 echo "Semgrep sarif path is $SEMGREP" 
 echo "CodeQL sarif path is $CODEQL" 

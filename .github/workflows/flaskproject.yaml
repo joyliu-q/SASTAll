@@ -94,20 +94,22 @@ jobs:
           name: codeql
           path: ./${{env.PROJECT}}
 
-      - name: (REMOVE LATER) CI debugging
+      # TODO: figure out why its name is python for some reason
+      # This is just a very temporary fix because it's just taking the python and
+      # directing it to a new file
+      - name: Create codeql sarif file (debug later)
+        run: cat ./${{env.PROJECT}}/python.sarif > ./${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif 
+        working-directory: ./
+      
+      - name: DEBUG
         run: ls
-
-      - name: (REMOVE LATER) CORRECT FILE debugging
-        run: cat ./${{env.PROJECT}}/${{env.PROJECT}}-semgrep.sarif
-        working-directory: ./
-
-      - name: (REMOVE LATER) CORRECT FILE debugging
-        run: cat ./${{env.PROJECT}}/python.sarif > ./${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif # TODO: figure out why its name is python for some reason
-        working-directory: ./
         
-      # Tfw we don't rlly need docker for this
+      - name: Set up aggregation script
+        run: chmod +x ./utils/agg.sh
+        working-directory: ./ 
+        
       - name: Aggregate
-        run: utils/agg.sh ${{env.PROJECT}} sastall.sarif
+        run: ./utils/agg.sh ${{env.PROJECT}} sastall.sarif
         working-directory: ./
 
       - name: (REMOVE LATER) CI debugging
@@ -118,4 +120,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: aggregated-sarif
-          path: ${{env.PROJECT}}/sastall.sarif
+          path: sastall.sarif

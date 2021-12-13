@@ -5,7 +5,7 @@ inputs:
   work-directory: # id of input
     description: 'Path of directory to run SAST tools in'
     required: false
-    default: './'
+    default: '.'
   result-file-name:
     description: 'Name of the aggregated SARIF file' # TODO: make it sound better ty
     required: false
