@@ -29,27 +29,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      #- name: Semgrep Github CI
-      #  uses: returntocorp/semgrep-action@v1
-      #  with:
-      #    config: >- # more at semgrep.dev/explore
-      #      p/security-audit
-      #      p/secrets
         
       - name: Install Semgrep
         run: python3 -m pip install semgrep
 
       - name: Run Semgrep
         run: semgrep --config p/security-audit . -o flaskproject-semgrep.sarif --sarif
-
-      # Rofl guess we'll just not upload this
-      #- name: Upload SARIF file
-      #  uses: github/codeql-action/upload-sarif@v1
-      #  with:
-      #    sarif_file: /home/runner/work/SASTAll/SASTAll/flaskproject-semgrep.sarif #IMPORTANT: for some reason checkout_path doesn't work??
-      #    #checkout_path: /home/runner/work/SASTAll/SASTAll/flaskproject # THIS IS SO BAD SHOULD NOT BE MANUALLY DEFINING THIS BUT NO DOCUMENTATION AaAaa
-
+        
       - name: Upload Semgrep Results as artifact
         uses: actions/upload-artifact@v2
         with:
@@ -100,12 +86,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: semgrep
-          path: flaskproject-semgrep.sarif
+          path: ./flaskproject-semgrep.sarif
       - name: Download codeql artifact
         uses: actions/download-artifact@v2
         with:
           name: codeql
-          path: flaskproject-codeql.sarif
+          path: ./flaskproject-codeql.sarif
       - name: (REMOVE LATER) CI debugging
         run: ls
       - name: (REMOVE LATER) CORRECT FILE debugging
