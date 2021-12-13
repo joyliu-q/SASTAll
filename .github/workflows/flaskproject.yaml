@@ -81,12 +81,17 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
         with:
+          output: flaskproject/flaskproject-codeql.sarif
           upload: false
-          name: codeql
 
       - name: (REMOVE THIS LATER) debugging
-        run: ls ../results/codeql.sarif
+        run: ls
       
+      - name: Upload CodeQL Results as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeql
+          path: flaskproject/flaskproject-codeql.sarif
       # TODO: get a way to find a local version of the CodeQL 
 
       #- name: Upload SARIF file
