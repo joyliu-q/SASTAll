@@ -1,0 +1,21 @@
+# action.yml
+name: 'SASTAll'
+description: 'Static application security testing toolkit'
+inputs:
+  work-directory: # id of input
+    description: 'Path of directory to run SAST tools in'
+    required: false
+    default: './'
+  result-file-name:
+    description: 'Name of the aggregated SARIF file' # TODO: make it sound better ty
+    required: false
+    default: "sastall.sarif"
+outputs:
+  time: # id of output
+    description: 'The time we greeted you'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.work-directory }}
+    - ${{ inputs.result-file-name }}
