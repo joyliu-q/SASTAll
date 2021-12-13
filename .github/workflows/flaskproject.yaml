@@ -106,9 +106,7 @@ jobs:
 
       # Tfw we don't rlly need docker for this
       - name: Aggregate
-        run: utils/agg.sh flaskproject sastall.sarif
-        with:
-          working-directory: ./
+        run: ../utils/agg.sh flaskproject sastall.sarif
       #- name: Upload sarif files
       #  uses: actions/upload-artifact@v2
       #  with:
