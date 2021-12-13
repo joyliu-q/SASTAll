@@ -1,0 +1,122 @@
+name: GoProject Application Testing
+
+env:
+  PROJECT: goproject   
+
+defaults:
+  run:
+    working-directory: goproject
+
+on:
+  push:
+    branches: [master]
+    # Commenting out line below for better CI debugging
+    #paths:
+    #  - '${{env.PROJECT}}/**'
+  pull_request:
+    branches: [master]
+    # Commenting out line below for better CI debugging
+    #paths:
+    #  - '${{env.PROJECT}}/**'
+  # schedule:
+  #  - cron: '30 * * * *'
+
+jobs:
+  semgrep:
+    name: Semgrep Scan
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read 
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Install Semgrep
+        run: python3 -m pip install semgrep
+
+      - name: Run Semgrep
+        run: semgrep --config p/security-audit . -o ${{env.PROJECT}}-semgrep.sarif --sarif
+        
+      - name: Upload Semgrep Results as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: semgrep
+          path: ${{env.PROJECT}}/${{env.PROJECT}}-semgrep.sarif # IMPORTANT: SPENT FOREVER ON THIS HERE'S WHY iT DIDNT WORK BEFORE: https://stackoverflow.com/questions/58226636/github-action-not-uploading-artifact
+  codeql:
+    name: CodeQL Analysis - Test application
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
+        with:
+          output: ${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif
+          upload: false
+      
+      - name: Upload CodeQL Results as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeql
+          path: ${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif
+  agg-and-upload:
+    name: Aggregate & Upload sarif files
+    runs-on: ubuntu-latest
+    needs: [semgrep, codeql]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download semgrep artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: semgrep
+          path: ./${{env.PROJECT}}
+
+      - name: Download codeql artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: codeql
+          path: ./${{env.PROJECT}}
+
+      # TODO: figure out why its name is go for some reason
+      # This is just a very temporary fix because it's just taking the go.sarif and
+      # directing it to a new file
+      - name: Create codeql sarif file (debug later)
+        run: cat ./${{env.PROJECT}}/go.sarif > ./${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif 
+        working-directory: ./
+      
+      - name: DEBUG
+        run: ls
+        
+      - name: Set up aggregation script
+        run: chmod +x ./utils/agg.sh
+        working-directory: ./ 
+        
+      - name: Aggregate
+        run: ./utils/agg.sh ${{env.PROJECT}} sastall.sarif
+        working-directory: ./
+
+      - name: (REMOVE LATER) CI debugging
+        run: ls -R
+        working-directory: ./
+
+      - name: Upload sarif files
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: sastall.sarif
