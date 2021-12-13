@@ -1,0 +1,10 @@
+config
+*~
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+config/config.json
