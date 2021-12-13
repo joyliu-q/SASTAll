@@ -120,4 +120,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: aggregated-sarif
-          path: ${{env.PROJECT}}/sastall.sarif
+          path: sastall.sarif
