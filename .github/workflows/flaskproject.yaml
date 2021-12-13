@@ -82,22 +82,33 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Download semgrep artifact
         uses: actions/download-artifact@v2
         with:
           name: semgrep
-          path: ./flaskproject-semgrep.sarif
+          path: ./flaskproject/flaskproject-semgrep.sarif
+
       - name: Download codeql artifact
         uses: actions/download-artifact@v2
         with:
           name: codeql
-          path: ./flaskproject-codeql.sarif
+          path: ./flaskproject/flaskproject-codeql.sarif
+
       - name: (REMOVE LATER) CI debugging
         run: ls
+
       - name: (REMOVE LATER) CORRECT FILE debugging
-        run: cat flaskproject-semgrep.sarif
+        run: cat ./flaskproject-semgrep.sarif
+
       - name: (REMOVE LATER) CORRECT FILE debugging
-        run: cat flaskproject-codeql.sarif
+        run: cat ./flaskproject-codeql.sarif
+
+      # Tfw we don't rlly need docker for this
+      - name: Aggregate
+        run: utils/agg.sh flaskproject sastall.sarif
+        with:
+          working-directory: ./
       #- name: Upload sarif files
       #  uses: actions/upload-artifact@v2
       #  with:
