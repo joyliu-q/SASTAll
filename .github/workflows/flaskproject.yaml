@@ -103,9 +103,10 @@ jobs:
       
       - name: Set up aggregation script
         run: chmod +x ./utils/agg.sh
+        working-directory: ./ 
         
       - name: Aggregate
-        run: utils/agg.sh ${{env.PROJECT}} sastall.sarif
+        run: ./utils/agg.sh ${{env.PROJECT}} sastall.sarif
         working-directory: ./
 
       - name: (REMOVE LATER) CI debugging
