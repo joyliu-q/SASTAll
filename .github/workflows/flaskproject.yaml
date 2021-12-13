@@ -53,8 +53,6 @@ jobs:
       security-events: write
     strategy:
       fail-fast: false
-      matrix:
-        language: python
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -62,7 +60,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:
-          languages: ${{ matrix.language }}
+          languages: python
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v1
