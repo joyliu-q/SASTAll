@@ -36,15 +36,9 @@ jobs:
       #    config: >- # more at semgrep.dev/explore
       #      p/security-audit
       #      p/secrets
-          
-      #- name: Create file used for upload
-      #  run: touch flaskproject-semgrep.sarif
-
+        
       - name: Install Semgrep
         run: python3 -m pip install semgrep
-
-      - name: BRUH WHATS THE CURRENT DIRECTORY????
-        run: pwd
 
       - name: Run Semgrep
         run: semgrep --config p/security-audit . -o flaskproject-semgrep.sarif --sarif
@@ -56,11 +50,11 @@ jobs:
       #    sarif_file: /home/runner/work/SASTAll/SASTAll/flaskproject-semgrep.sarif #IMPORTANT: for some reason checkout_path doesn't work??
       #    #checkout_path: /home/runner/work/SASTAll/SASTAll/flaskproject # THIS IS SO BAD SHOULD NOT BE MANUALLY DEFINING THIS BUT NO DOCUMENTATION AaAaa
 
-      - name: Cache Semgrep Results
-        uses: actions/cache@v2
+      - name: Upload Semgrep Results as artifact
+        uses: actions/upload-artifact@v2
         with:
-          path: flaskproject-semgrep.sarif
-          key: semgrep
+          name: semgrep
+          path: flaskproject/flaskproject-semgrep.sarif # IMPORTANT: SPENT FOREVER ON THIS HERE'S WHY iT DIDNT WORK BEFORE: https://stackoverflow.com/questions/58226636/github-action-not-uploading-artifact
   codeql:
     name: CodeQL Analysis - Test application
     runs-on: ubuntu-latest
@@ -86,10 +80,18 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
+        with:
+          output: flaskproject/flaskproject-codeql.sarif
+          upload: false
 
       - name: (REMOVE THIS LATER) debugging
         run: ls
       
+      - name: Upload CodeQL Results as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeql
+          path: flaskproject/flaskproject-codeql.sarif
       # TODO: get a way to find a local version of the CodeQL 
 
       #- name: Upload SARIF file
