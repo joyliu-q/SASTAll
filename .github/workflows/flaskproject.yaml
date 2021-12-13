@@ -87,13 +87,13 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: semgrep
-          path: ./flaskproject/flaskproject-semgrep.sarif
+          path: ./flaskproject
 
       - name: Download codeql artifact
         uses: actions/download-artifact@v2
         with:
           name: codeql
-          path: ./flaskproject/flaskproject-codeql.sarif
+          path: ./flaskproject
 
       - name: (REMOVE LATER) CI debugging
         run: ls
