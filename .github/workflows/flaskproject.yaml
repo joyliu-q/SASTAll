@@ -81,6 +81,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        working-directory: ./
 
       - name: Download semgrep artifact
         uses: actions/download-artifact@v2
@@ -105,7 +106,7 @@ jobs:
 
       # Tfw we don't rlly need docker for this
       - name: Aggregate
-        run: ../utils/agg.sh ${{env.PROJECT}} sastall.sarif
+        run: ./utils/agg.sh ${{env.PROJECT}} sastall.sarif
       
       - name: (REMOVE LATER) CI debugging
         run: ls
