@@ -53,7 +53,7 @@ jobs:
       - name: Upload Semgrep Results as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: semgrep-${{ hashFiles('flaskproject/flaskproject-semgrep.sarif') }}
+          name: semgrep
           path: flaskproject/flaskproject-semgrep.sarif # IMPORTANT: SPENT FOREVER ON THIS HERE'S WHY iT DIDNT WORK BEFORE: https://stackoverflow.com/questions/58226636/github-action-not-uploading-artifact
   codeql:
     name: CodeQL Analysis - Test application
