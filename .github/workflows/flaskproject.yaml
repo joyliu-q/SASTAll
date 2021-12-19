@@ -1,7 +1,8 @@
 name: FlaskProject Application Testing
 
 env:
-  PROJECT: flaskproject   
+  PROJECT: flaskproject
+  PROJECTPATH: ./flaskproject
 
 defaults:
   run:
@@ -12,12 +13,12 @@ on:
     branches: [master]
     # Commenting out line below for better CI debugging
     #paths:
-    #  - '${{env.PROJECT}}/**'
+    #  - '${{env.PROJECTPATH}}/**'
   pull_request:
     branches: [master]
     # Commenting out line below for better CI debugging
     #paths:
-    #  - '${{env.PROJECT}}/**'
+    #  - '${{env.PROJECTPATH}}/**'
   # schedule:
   #  - cron: '30 * * * *'
 
@@ -43,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: semgrep
-          path: ${{env.PROJECT}}/${{env.PROJECT}}-semgrep.sarif # IMPORTANT: SPENT FOREVER ON THIS HERE'S WHY iT DIDNT WORK BEFORE: https://stackoverflow.com/questions/58226636/github-action-not-uploading-artifact
+          path: ${{env.PROJECTPATH}}/${{env.PROJECT}}-semgrep.sarif # IMPORTANT: SPENT FOREVER ON THIS HERE'S WHY iT DIDNT WORK BEFORE: https://stackoverflow.com/questions/58226636/github-action-not-uploading-artifact
   codeql:
     name: CodeQL Analysis - Test application
     runs-on: ubuntu-latest
@@ -59,6 +60,8 @@ jobs:
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
+        with:
+          source-root: ${{env.PROJECTPATH}}
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v1
@@ -66,14 +69,15 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
         with:
-          output: ${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif
+          # output is actually the directory files are saved to, not a file
+          output: ${{env.PROJECTPATH}}/${{env.PROJECT}}-codeql.sarif
           upload: false
       
       - name: Upload CodeQL Results as artifact
         uses: actions/upload-artifact@v2
         with:
           name: codeql
-          path: ${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif
+          path: ${{env.PROJECTPATH}}/${{env.PROJECT}}-codeql.sarif
   agg-and-upload:
     name: Aggregate & Upload sarif files
     runs-on: ubuntu-latest
@@ -86,19 +90,19 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: semgrep
-          path: ./${{env.PROJECT}}
+          path: ${{env.PROJECTPATH}}
 
       - name: Download codeql artifact
         uses: actions/download-artifact@v2
         with:
           name: codeql
-          path: ./${{env.PROJECT}}
+          path: ${{env.PROJECTPATH}}
 
-      # TODO: figure out why its name is python for some reason
-      # This is just a very temporary fix because it's just taking the python and
-      # directing it to a new file
+      # The reason it's called python.sarif is because the path provided is not for a file,
+      # but rather a directory to store files in. If it only contains 1 file, that file
+      # would be named to the path (https://github.com/github/codeql-action/blob/main/lib/analyze-action.js)
       - name: Create codeql sarif file (debug later)
-        run: cat ./${{env.PROJECT}}/python.sarif > ./${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif 
+        run: cat ${{env.PROJECTPATH}}/python.sarif > ./${{env.PROJECT}}/${{env.PROJECT}}-codeql.sarif 
         working-directory: ./
       
       - name: DEBUG
@@ -109,7 +113,7 @@ jobs:
         working-directory: ./ 
         
       - name: Aggregate
-        run: ./utils/agg.sh ${{env.PROJECT}} sastall.sarif
+        run: ./utils/agg.sh ${{env.PROJECT}} ${{env.PROJECT}}-sastall.sarif
         working-directory: ./
 
       - name: (REMOVE LATER) CI debugging
@@ -119,4 +123,4 @@ jobs:
       - name: Upload sarif files
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: sastall.sarif
+          sarif_file: ${{env.PROJECT}}-sastall.sarif
